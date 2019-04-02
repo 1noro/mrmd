@@ -104,4 +104,6 @@ venv.bak/
 .mypy_cache/
 
 # by inoro
-tests/1-send-mail/test1/cred.txt
+cred.txt
+mailto.txt
+mailfrom.txt
