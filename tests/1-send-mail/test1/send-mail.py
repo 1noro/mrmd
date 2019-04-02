@@ -1,16 +1,21 @@
 
+### IMPORTS ####################################################################
 import socket
 import ssl
 import base64
 
+### GLOBAL VARIABLES ###########################################################
 subject = b'Esto es una prueba3'
 text = b'LOLOLOLOLO3'
+host = 'smtp.gmail.com'
+port = 25
 
 with open('cred.txt') as f: cred = f.read()
 credarr = cred.split('::')
 us = credarr[0].encode('utf-8')
 ps = credarr[1].replace('\n','').encode('utf-8')
 
+### FUNCTIONS ##################################################################
 def by_b64(by):
     b64 = base64.b64encode(by)
     return b64
@@ -35,9 +40,7 @@ def mysslonlysend(sslsock, sdata):
     print('[~~> ] ', repr(sdata))
     sslsock.sendall(sdata)
 
-# host = socket.gethostname()
-host = 'smtp.gmail.com'
-port = 25
+### EXEC #######################################################################
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect((host, port))
 
