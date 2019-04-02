@@ -1,0 +1,318 @@
+INSPIRATION: https://busylog.net/telnet-imap-commands-note/
+INSPIRATION: https://stackoverflow.com/questions/37787767/fetch-imap-body-message-by-telnet
+INSPIRATION: https://gist.github.com/gustavohenrique/5721719
+
+cosmo@mpu:~$ openssl s_client -crlf -connect imap.gmail.com:993
+CONNECTED(00000003)
+depth=2 OU = GlobalSign Root CA - R2, O = GlobalSign, CN = GlobalSign
+verify return:1
+depth=1 C = US, O = Google Trust Services, CN = Google Internet Authority G3
+verify return:1
+depth=0 C = US, ST = California, L = Mountain View, O = Google LLC, CN = imap.gmail.com
+verify return:1
+---
+Certificate chain
+ 0 s:/C=US/ST=California/L=Mountain View/O=Google LLC/CN=imap.gmail.com
+   i:/C=US/O=Google Trust Services/CN=Google Internet Authority G3
+ 1 s:/C=US/O=Google Trust Services/CN=Google Internet Authority G3
+   i:/OU=GlobalSign Root CA - R2/O=GlobalSign/CN=GlobalSign
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIEijCCA3KgAwIBAgIQc1cWxD8ohYa4RoG0o01PpTANBgkqhkiG9w0BAQsFADBU
+MQswCQYDVQQGEwJVUzEeMBwGA1UEChMVR29vZ2xlIFRydXN0IFNlcnZpY2VzMSUw
+IwYDVQQDExxHb29nbGUgSW50ZXJuZXQgQXV0aG9yaXR5IEczMB4XDTE5MDMwMTA5
+MzExOVoXDTE5MDUyNDA5MjQwMFowaDELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNh
+bGlmb3JuaWExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxEzARBgNVBAoMCkdvb2ds
+ZSBMTEMxFzAVBgNVBAMMDmltYXAuZ21haWwuY29tMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEA0Ukivk52wMzq7MTvjIZe02CmQA75XOd41VjXjVEN+Smd
+jTiGiV/ALd5Pxo5ooXWkHvrmShTZNkhLs9HN7LFmLkn4+q1WWQ/gAIezDhns3JOg
+TyiPATY8KLSs1rM509fsv5oSuEivZIS6VV39vHdp+yN8qPV/dfRV7IofqB+W6Hjl
+/WNx342sjfiNlIINLRSs/itsnXjlDJJHspPGwJEhg1ECiMnXo2e2HdR2IMZYrQgi
+IFvdwTCzBD/JPiEALL1wzcNlaNiNZln3X7LfZbUZl9lWAU4XN+eI9Roh+Zaphqsc
+ZI36ZnIzjx24b7qOpPBxCnj9pwnMIlD3VUery+yf9QIDAQABo4IBQjCCAT4wEwYD
+VR0lBAwwCgYIKwYBBQUHAwEwGQYDVR0RBBIwEIIOaW1hcC5nbWFpbC5jb20waAYI
+KwYBBQUHAQEEXDBaMC0GCCsGAQUFBzAChiFodHRwOi8vcGtpLmdvb2cvZ3NyMi9H
+VFNHSUFHMy5jcnQwKQYIKwYBBQUHMAGGHWh0dHA6Ly9vY3NwLnBraS5nb29nL0dU
+U0dJQUczMB0GA1UdDgQWBBRSqcLIC8/mzCEzB6dyVr4ZFyeepTAMBgNVHRMBAf8E
+AjAAMB8GA1UdIwQYMBaAFHfCuFCaZ3Z2sS3ChtCDoH6mfrpLMCEGA1UdIAQaMBgw
+DAYKKwYBBAHWeQIFAzAIBgZngQwBAgIwMQYDVR0fBCowKDAmoCSgIoYgaHR0cDov
+L2NybC5wa2kuZ29vZy9HVFNHSUFHMy5jcmwwDQYJKoZIhvcNAQELBQADggEBAMED
+fVEeFwkbNx9uu9yF7pR4c59Y12/8/QT4FRKbdVzXD6D6DTZhSCeA0yvi+ocNEJ8P
+MHIrRx+zoaq76Man5TVcUvYkb/a2RBloZY6nyIDl1TIykKSH3deUWDgNeNBmsGAT
+cvNwtLqGcUXpztNCUYz4zPPPzau+m+a2zQtbngMRj0m8HlbYXK3uGW1tP2CrcQW7
+KkFffESVWyLcRChB5CYReTBd2InZrxKHqu6/HL8x7GH1UTNbpaM5utD2Icv2AEsw
+gIC6Rg8CItB6T0CZ4D1Blp8PHuhPn2UpEBwspfkdLFE+k+ny+WWiSErZqSyc5zAi
+rgdAafAPMrudkvysvmU=
+-----END CERTIFICATE-----
+subject=/C=US/ST=California/L=Mountain View/O=Google LLC/CN=imap.gmail.com
+issuer=/C=US/O=Google Trust Services/CN=Google Internet Authority G3
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 2962 bytes and written 261 bytes
+Verification: OK
+---
+New, TLSv1.2, Cipher is ECDHE-RSA-CHACHA20-POLY1305
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-CHACHA20-POLY1305
+    Session-ID: C00334CD035DEC8D8E5CEAA17AE1D13B826302541F58E9399B025A9DE2AC4292
+    Session-ID-ctx:
+    Master-Key: E772C433C5E0023E57D03CC1AD3B9FF5F0EF035E2EBEF0433B37CD2BC76F928B0E78183DD2116E8DAA118BA8F9E57916
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket lifetime hint: 100799 (seconds)
+    TLS session ticket:
+    0000 - 00 a9 6b 7c 27 16 25 e1-e1 22 b2 3a 75 2b 6a bb   ..k|'.%..".:u+j.
+    0010 - 25 a8 be 1d e4 29 fb 8b-e2 de 66 8e 73 4a 60 c6   %....)....f.sJ`.
+    0020 - 0d 6c 94 5b 0d b8 9c 3f-94 7f 93 9a bb 29 b6 10   .l.[...?.....)..
+    0030 - 2a 5d a3 a2 39 1f d4 4c-c0 a4 a1 e9 bd 53 3d 52   *]..9..L.....S=R
+    0040 - 21 78 6e 50 17 24 da 85-d3 ab 7e ac 94 99 82 8a   !xnP.$....~.....
+    0050 - 5c 9b 9e 43 b1 6a 07 4b-cd b2 00 1b 3e 2b 4b 1c   \..C.j.K....>+K.
+    0060 - ed fb b0 26 f4 94 b5 20-f6 42 17 01 83 8f a6 4c   ...&... .B.....L
+    0070 - 38 b2 72 01 0c aa 1c 61-d4 f9 cf 9a c3 ab 73 ea   8.r....a......s.
+    0080 - f5 9b 2c 8e 9a 18 3a 5b-86 14 38 58 13 3e 2f 1e   ..,...:[..8X.>/.
+    0090 - d7 25 a6 87 3d 6e 09 0c-6a ef 0b 49 21 84 1b ea   .%..=n..j..I!...
+    00a0 - 11 c0 07 9d 9b e4 0b e3-b6 48 2e 27 33 1e 9d 03   .........H.'3...
+    00b0 - 88 c4 7e 05 b9 3d 8c 68-8f c9 e7 e8 40 4b 07 a8   ..~..=.h....@K..
+    00c0 - 57 aa 62 02 dc f1 b2 7a-2c cb 22 0b 9c 87 57 ec   W.b....z,."...W.
+    00d0 - 77 aa d1 89 c8 63 da 95-09 06                     w....c....
+
+    Start Time: 1554220855
+    Timeout   : 7200 (sec)
+    Verify return code: 0 (ok)
+    Extended master secret: yes
+---
+* OK Gimap ready for requests from 81.35.199.209 v16mb195908904wrm
+login
+* BAD invalid tag v16mb195908904wrm
+tag login nnoottiiffyy.mm@gmail.com Abc123!!
+* CAPABILITY IMAP4rev1 UNSELECT IDLE NAMESPACE QUOTA ID XLIST CHILDREN X-GM-EXT-1 UIDPLUS COMPRESS=DEFLATE ENABLE MOVE CONDSTORE ESEARCH UTF8=ACCEPT LIST-EXTENDED LIST-STATUS LITERAL- SPECIAL-USE APPENDLIMIT=35651584
+tag OK nnoottiiffyy.mm@gmail.com authenticated (Success)
+tag list "" "*"
+* LIST (\HasNoChildren) "/" "INBOX"
+* LIST (\HasChildren \Noselect) "/" "[Gmail]"
+* LIST (\Drafts \HasNoChildren) "/" "[Gmail]/Borradores"
+* LIST (\Flagged \HasNoChildren) "/" "[Gmail]/Destacados"
+* LIST (\HasNoChildren \Sent) "/" "[Gmail]/Enviados"
+* LIST (\HasNoChildren \Important) "/" "[Gmail]/Importantes"
+* LIST (\HasNoChildren \Trash) "/" "[Gmail]/Papelera"
+* LIST (\HasNoChildren \Junk) "/" "[Gmail]/Spam"
+* LIST (\All \HasNoChildren) "/" "[Gmail]/Todos"
+tag OK Success
+^[[A
+* BAD [CLIENTBUG] Invalid tag
+tag select "inbox"
+* FLAGS (\Answered \Flagged \Draft \Deleted \Seen $NotPhishing $Phishing)
+* OK [PERMANENTFLAGS (\Answered \Flagged \Draft \Deleted \Seen $NotPhishing $Phishing \*)] Flags permitted.
+* OK [UIDVALIDITY 1] UIDs valid.
+* 1 EXISTS
+* 0 RECENT
+* OK [UIDNEXT 2] Predicted next UID.
+* OK [HIGHESTMODSEQ 1281]
+tag OK [READ-WRITE] inbox selected. (Success)
+tag list "" "*"
+* LIST (\HasNoChildren) "/" "INBOX"
+* LIST (\HasChildren \Noselect) "/" "[Gmail]"
+* LIST (\Drafts \HasNoChildren) "/" "[Gmail]/Borradores"
+* LIST (\Flagged \HasNoChildren) "/" "[Gmail]/Destacados"
+* LIST (\HasNoChildren \Sent) "/" "[Gmail]/Enviados"
+* LIST (\HasNoChildren \Important) "/" "[Gmail]/Importantes"
+* LIST (\HasNoChildren \Trash) "/" "[Gmail]/Papelera"
+* LIST (\HasNoChildren \Junk) "/" "[Gmail]/Spam"
+* LIST (\All \HasNoChildren) "/" "[Gmail]/Todos"
+tag OK Success
+tag list "/INBOX" "*"
+* LIST (\HasNoChildren) "/" "INBOX"
+tag OK Success
+SELECT INBOX
+SELECT BAD Unknown command: INBOX
+a SELECT INBOX
+* FLAGS (\Answered \Flagged \Draft \Deleted \Seen $NotPhishing $Phishing)
+* OK [PERMANENTFLAGS (\Answered \Flagged \Draft \Deleted \Seen $NotPhishing $Phishing \*)] Flags permitted.
+* OK [UIDVALIDITY 1] UIDs valid.
+* 1 EXISTS
+* 0 RECENT
+* OK [UIDNEXT 2] Predicted next UID.
+* OK [HIGHESTMODSEQ 1294]
+a OK [READ-WRITE] INBOX selected. (Success)
+a SEARCH BODY "chulo"
+* SEARCH 1
+a OK SEARCH completed (Success)
+a FETCH 1 (BODY)
+* 1 FETCH (BODY (("TEXT" "PLAIN" ("CHARSET" "utf-8") NIL NIL "QUOTED-PRINTABLE" 118 3)("TEXT" "HTML" ("CHARSET" "utf-8") NIL NIL "QUOTED-PRINTABLE" 122 3) "ALTERNATIVE"))
+a OK Success
+a FETCH 1 (BODY.TEXT)
+a BAD Could not parse command
+a FETCH 1
+a BAD Could not parse command
+a FETCH 1 (BODY.PEEK[HEADER])
+* 1 FETCH (BODY[HEADER] {4718}
+Delivered-To: nnoottiiffyy.mm@gmail.com
+Received: by 2002:a9d:2787:0:0:0:0:0 with SMTP id c7csp1048788otb; Tue, 2 Apr
+ 2019 09:05:58 -0700 (PDT)
+X-Received: by 2002:adf:f80d:: with SMTP id s13mr44333602wrp.38.1554221158310;
+ Tue, 02 Apr 2019 09:05:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1554221158; cv=none; d=google.com;
+ s=arc-20160816;
+ b=qoIfT6R1Jw36nt8zsMHWT3L/lm+YZVVCMpTJblJyjzP+mPSNQYwF19hOOtNOpYYlPS
+ haGf5b8uTMYopEE4wOV1yBEDlBdHCGOtpoKVYOXgvUqKb+OBJZngrQH5Uk3+yJapv81A
+ YEwvIGWC+6F6kw33/pYjIQCUCi1xcxoxw4wpph8Z69JKyfbFCsThdNrHm0+DK8LgclJE
+ 35r2OFQMCLYIlwnNdeJRXXA+NdH6pq0IF3rZz7HJNCi1u7Gh+IgU6W//9EdR29n4LH8R
+ jz7Pi5iSEhmSPwiEAY1DI+VHp6JCucB+nBgg73mFyA+a0BkhIjl1IQwTyFzl0H0Wb5Ji ojew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20160816;
+ h=message-id:from:to:subject:content-transfer-encoding:mime-version
+ :user-agent:date:dkim-signature;
+ bh=VT/u384zl/05kYCK8igPj07rm4SJFogbk6LthmLzBag=;
+ b=sOkztHd074waoiKLxesRvaQASVSInys3y7ho4q2wzD06Nfxh6OHfCxGSYSq7UoL1gr
+ kvAdTk7yDRrYW/Yr3yReEBwsygpKem8G9/n358omzU6NyU1WofRjgCoO7H7iAPV3+c11
+ On/J2fN6k7o8XCe4ylhlInmPZJDDa/tdyE3gzwhkuFfYcoYTbcy19K39gVck2SEUjbUx
+ Y7XDpBvnwDgg5aFeG5wAxgWSfFbkdW0S+yGCsA6fWfptXDJhfX0VnmiUZ13L0nCYrBwn
+ FkeCR8Hj31/G4ylppIGKVdn9IrqaNy1vtNNZ7CBih4Xxvz+/+tjdon3n6tzScaJQIYjw Slow==
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@gmail.com
+ header.s=20161025 header.b=RvHG75aI; spf=pass (google.com: domain of
+ alfredorodriguez1011@gmail.com designates 209.85.220.41 as permitted sender)
+ smtp.mailfrom=alfredorodriguez1011@gmail.com; dmarc=pass (p=NONE
+ sp=QUARANTINE dis=NONE) header.from=gmail.com
+Return-Path: <alfredorodriguez1011@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com.
+ [209.85.220.41]) by mx.google.com with SMTPS id
+ j63sor8690341wmb.19.2019.04.02.09.05.58 for <nnoottiiffyy.mm@gmail.com>
+ (Google Transport Security); Tue, 02 Apr 2019 09:05:58 -0700 (PDT)
+Received-SPF: pass (google.com: domain of alfredorodriguez1011@gmail.com
+ designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com; dkim=pass header.i=@gmail.com
+ header.s=20161025 header.b=RvHG75aI; spf=pass (google.com: domain of
+ alfredorodriguez1011@gmail.com designates 209.85.220.41 as permitted sender)
+ smtp.mailfrom=alfredorodriguez1011@gmail.com; dmarc=pass (p=NONE
+ sp=QUARANTINE dis=NONE) header.from=gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=date:user-agent:mime-version:content-transfer-encoding:subject:to
+ :from:message-id; bh=VT/u384zl/05kYCK8igPj07rm4SJFogbk6LthmLzBag=;
+ b=RvHG75aINnyNOIZKJ8S/1NrJUU85IHg43zzBTV+xW26I4uA+HYkTlYyUf3txnH4A7Z
+ 2sUrORrumgq7oK+y1zYOOhLfbSyzvqPQSxe1XWHjrgbTQ8YRAihYj9FUim2+kBQoXp9M
+ MmtafYpGD8C0IK8ra0aI0Lsw7o1b2Rh42UsjdUy0HKBS9KsV95bkj5gBWkoWaDokt5Wl
+ OzBC60XcHECZAMLDLNHwdo0DvW+6jgl+pfxVP85Xur+6lNaLybvcEj/Q05RDYxQmSC9S
+ Z4Yiq1PjbV8x9ONFix0FSh7f4IbsuQUNQK1iiZu1JWpYa9enQcTqCYJtE8ULJRQhfd9H 8yjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net;
+ s=20161025; h=x-gm-message-state:date:user-agent:mime-version
+ :content-transfer-encoding:subject:to:from:message-id;
+ bh=VT/u384zl/05kYCK8igPj07rm4SJFogbk6LthmLzBag=;
+ b=TpES9m4w98Oe2uwM7oWRwUIM8nEYSca87Erqaiwh8qTWKxJ/XwXH9HsayXAuWxMzBg
+ Fl9qXYewgttn6+rOxAhxx68wrX6xzLDqrLM65EwU2sFsOwLO8L8qfx58tnMrx9RRzygr
+ 6Xf+YleYlT7/fGC5viSwIq6hShBfBQofnw16AylWYHgU6l4upgHPjk0Y/zbnGtnTaxKi
+ p3QcRThtC33XV7eZ2H+ORs+/yWnB2qeMqvWvZoopM7QOtCd6UNT/8Vu3qUoiYMc/KjWR
+ h6RCFX9Q79u4RChr4gsJ5xBeMNSNms3HQzjzst0d0RwxmdSiZED4uJtX+p8lJRlOhgYm /zUQ==
+X-Gm-Message-State: APjAAAXfj2YvILTacPPjt+C45pQo0vCK8Bcnkbq3E3jFAT6eRus0lWz8
+ j83ok5w22Gq3I48gWrybUNd9lhaW
+X-Google-Smtp-Source: APXvYqxcuONhgijqQ6z4l1bZbInBJ/yOqrM2XPrup5r17G8/msqAGSHvzapMLvFvCpJ1X8cIQS/q4A==
+X-Received: by 2002:a1c:dfc5:: with SMTP id w188mr4085012wmg.79.1554221157794;
+ Tue, 02 Apr 2019 09:05:57 -0700 (PDT)
+Return-Path: <alfredorodriguez1011@gmail.com>
+Received: from movila.home.lan (209.red-81-35-199.dynamicip.rima-tde.net.
+ [81.35.199.209]) by smtp.gmail.com with ESMTPSA id
+ j22sm40215163wrd.91.2019.04.02.09.05.57 for <nnoottiiffyy.mm@gmail.com>
+ (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256); Tue, 02 Apr
+ 2019 09:05:57 -0700 (PDT)
+Date: Tue, 02 Apr 2019 18:05:55 +0200
+User-Agent: K-9 Mail for Android
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="----67W03D4CO6UMVPZ4M1SKFCDUBENZV0"
+Content-Transfer-Encoding: 7bit
+Subject: asunto chulo
+To: nnoottiiffyy.mm@gmail.com
+From: alfredo <alfredorodriguez1011@gmail.com>
+Message-ID: <DADAEB67-1E02-40AC-8503-990AA1CB92D3@gmail.com>
+
+)
+a OK Success
+a FETCH 1 (FLAGS BODY[HEADER.FIELDS (DATE FROM SUBJECT)])
+* 1 FETCH (FLAGS (\Seen) BODY[HEADER.FIELDS (DATE FROM SUBJECT)] {112}
+Date: Tue, 02 Apr 2019 18:05:55 +0200
+Subject: asunto chulo
+From: alfredo <alfredorodriguez1011@gmail.com>
+
+)
+a OK Success
+a FETCH 1 (BODY[PLAIN])
+a BAD Could not parse command
+a FETCH 1 BODY
+* 1 FETCH (BODY (("TEXT" "PLAIN" ("CHARSET" "utf-8") NIL NIL "QUOTED-PRINTABLE" 118 3)("TEXT" "HTML" ("CHARSET" "utf-8") NIL NIL "QUOTED-PRINTABLE" 122 3) "ALTERNATIVE"))
+a OK Success
+a FETCH 1 (BODY[TEXT])
+* 1 FETCH (BODY[TEXT] {539}
+------67W03D4CO6UMVPZ4M1SKFCDUBENZV0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+texto chulo 1
+txt2
+--=20
+Enviado desde mi dispositivo Android con K-9 Mail=2E Por favor, disculpa m=
+i brevedad=2E
+------67W03D4CO6UMVPZ4M1SKFCDUBENZV0
+Content-Type: text/html;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+texto chulo 1<br>txt2<br>-- <br>Enviado desde mi dispositivo Android con K-=
+9 Mail=2E Por favor, disculpa mi brevedad=2E
+------67W03D4CO6UMVPZ4M1SKFCDUBENZV0--
+)
+a OK Success
+a FETCH 1 (BODY[HTML])
+a BAD Could not parse command
+a FETCH 1 (BODY[2])
+* 1 FETCH (BODY[2] {122}
+texto chulo 1<br>txt2<br>-- <br>Enviado desde mi dispositivo Android con K-=
+9 Mail=2E Por favor, disculpa mi brevedad=2E)
+a OK Success
+a FETCH 1 (BODY[1])
+* 1 FETCH (BODY[1] {118}
+texto chulo 1
+txt2
+--=20
+Enviado desde mi dispositivo Android con K-9 Mail=2E Por favor, disculpa m=
+i brevedad=2E)
+a OK Success
+
+tag select "inbox"
+* FLAGS (\Answered \Flagged \Draft \Deleted \Seen $NotPhishing $Phishing)
+* OK [PERMANENTFLAGS (\Answered \Flagged \Draft \Deleted \Seen $NotPhishing $Phishing \*)] Flags permitted.
+* OK [UIDVALIDITY 1] UIDs valid.
+* 2 EXISTS
+* 0 RECENT
+* OK [UIDNEXT 3] Predicted next UID.
+* OK [HIGHESTMODSEQ 1413]
+tag OK [READ-WRITE] inbox selected. (Success)
+tag fetch 2 body[1]
+* 2 FETCH (FLAGS (\Seen) BODY[1] {113}
+hola chulo 222
+--=20
+Enviado desde mi dispositivo Android con K-9 Mail=2E Por favor, disculpa m=
+i brevedad=2E)
+tag OK Success
+tag fetch *
+tag BAD Could not parse command
+tag fetch "*" body
+tag BAD Could not parse command
+tag fetch 1:* flags
+* 1 FETCH (FLAGS (\Seen))
+* 2 FETCH (FLAGS (\Seen))
+tag OK Success
+tag fetch 1:* internaldate
+* 1 FETCH (INTERNALDATE "02-Apr-2019 16:05:58 +0000")
+* 2 FETCH (INTERNALDATE "02-Apr-2019 16:35:35 +0000")
+tag OK Success
