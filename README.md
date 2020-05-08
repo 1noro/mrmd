@@ -1,2 +1,2 @@
-# mailer-reminder
-is that a good name?
+# mrmd
+mailer-reminder
