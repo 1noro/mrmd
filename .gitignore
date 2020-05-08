@@ -107,3 +107,4 @@ venv.bak/
 cred.txt
 mailto.txt
 mailfrom.txt
+login.conf
