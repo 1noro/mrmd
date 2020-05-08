@@ -2,6 +2,7 @@
 import os
 
 import gnupg
+from pprint import pprint
 
 import mrmd
 from mrmd import utils
@@ -68,7 +69,12 @@ def main():
     # print('unencrypted_string: ', unencrypted_string)
     # print('encrypted_string: ', encrypted_string)
 
-    mail.send_rmd(username, passwgoo, mailsto, verbose)
+    # gpg = gnupg.GPG(gnupghome='/home/cosmo/.gpghome')
+    # key_data = open('nnoottiiffyy_sec.asc').read()
+    # import_result = gpg.import_keys(key_data)
+    # pprint(import_result.results)
+
+    # mail.send_rmd(username, passwgoo, mailsto, verbose)
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
