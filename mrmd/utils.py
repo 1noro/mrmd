@@ -3,7 +3,7 @@
 
 ### IMPORTS ###################################################################
 import datetime
-
+import re
 from optparse import OptionParser
 
 import mrmd.log as log
@@ -32,3 +32,34 @@ def get_new_strtime():
     now = datetime.datetime.now()
     strnow = now.strftime("%Y-%m-%d %H:%M:%S")
     return strnow
+
+# -----------------------------------------------------------------------------
+def get_sig_blk(str):
+    out = ""
+    record = False
+    lines = str.split("\r\n")
+    for line in lines:
+        if line == "-----BEGIN PGP SIGNATURE-----": record = True
+        if line == "-----END PGP SIGNATURE-----":
+            out += line
+            break
+        if record: out += line + "\r\n"
+    return out
+
+def get_msg_blk(str):
+    regex = r"boundary=\"(.*)\""
+    matches = re.finditer(regex, str, re.MULTILINE)
+    for match in matches:
+        # print(match.groups()[0])
+        for group in match.groups():
+            print(group)
+    # out = ""
+    # record = False
+    # lines = str.split("\r\n")
+    # for line in lines:
+    #     if line == "-----BEGIN PGP SIGNATURE-----": record = True
+    #     if line == "-----END PGP SIGNATURE-----":
+    #         out += line
+    #         break
+    #     if record: out += line + "\r\n"
+    # return out

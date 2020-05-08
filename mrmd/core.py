@@ -63,10 +63,11 @@ def main():
     mygpg = gnupg.GPG(gnupghome=mygnupghome)
 
     # gpg.test(mygnupghome, username, passwgpg, verbose)
+    gpg.test5(mygnupghome, username, passwgpg, verbose)
 
     # msend.send_rmd_test(username, passwgoo, passwgpg, mailsto, mygpg, verbose)
 
-    mrecv.recv_rmd_test(username, passwgoo, passwgpg, mygpg, verbose)
+    # mrecv.recv_rmd_test(username, passwgoo, passwgpg, mygpg, verbose)
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
