@@ -1,34 +1,36 @@
-# modules.mail
-# by inoro
 
-### IMPORTS ###################################################################
 import socket
 import ssl
 import base64
-import datetime
 
+import datetime
 import smtplib
 
 import mrmd.log as log
 
 ### FUNCTIONS #################################################################
-def send_rmd(gmail_user, gmail_password, mailsto, verbose):
+def send_rmd_test(gmail_user, gmail_password, passwgpg, mailsto, mygpg, verbose):
     to = ""
     if len(mailsto) > 1: to = ", ".join(mailsto)
     else: to = mailsto[0]
 
-    sent_from = gmail_user
-    subject = 'OMG Super Important Message2'
-    body = 'Hey, what\'s up?\r\n--\r\nYou kjdash'
-
     now = datetime.datetime.now()
-    bnow = now.strftime("%a, %d %b %Y %H:%M:%S -0700 (PDT)").encode('utf-8')
+    strnow = now.strftime("%a, %d %b %Y %H:%M:%S -0700 (PDT)")
+
+    sent_from = gmail_user
+    subject = "COSA: " + strnow
+    body = "Hola, esto está cifrado.".encode("utf-8")
+
+
+    if passwgpg != "": body = mygpg.encrypt(body, mailsto[0], sign=gmail_user, passphrase=passwgpg)
+    else: body = mygpg.encrypt(body, mailsto[0], sign=gmail_user)
+    body = str(body)
 
     email_text =    "From: " + sent_from + "\r\n" \
                     "To: " + to + "\r\n" \
                     "Subject: " + subject + "\r\n" \
                     "\r\n" \
-                    "" + body + "\r\n"
+                    "" + body + ""
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)

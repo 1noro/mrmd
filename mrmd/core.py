@@ -1,18 +1,18 @@
 
 import os
-
 import gnupg
-from pprint import pprint
 
 import mrmd
 from mrmd import utils
 from mrmd import log
-from mrmd import mail
+from mrmd import msend
+from mrmd import mrecv
+from mrmd import gpg
 
 ### EDITABLE VARIABLES ########################################################
-LOGIN_FILE = "docs/login.conf"
-MAILSTO_FILE = "docs/mailsto.list"
-TABULAR = " "*8
+LOGIN_FILE = "config/login.conf"
+MAILSTO_FILE = "config/mailsto.list"
+TABULAR = " " * 8
 
 ### AUTOMATIC VARIABLES #######################################################
 verbose = 0
@@ -22,6 +22,7 @@ username = ""
 passwgoo = ""
 passwgpg = ""
 mailsto = []
+mygnupghome = os.environ['HOME'] + "/.gnupg"
 
 ### FUNCTIONS #################################################################
 # ...
@@ -59,22 +60,13 @@ def main():
         sys.exit()
 
     # --- EXECUTION -----------------------------------------------------------
-    # gpg = gnupg.GPG(gnupghome='/home/cosmo/.gpghome')
-    # unencrypted_string = 'Who are you? How did you get in my house?'
-    # encrypted_data = gpg.encrypt(unencrypted_string, 'nnoottiiffyy.mm@gmail.com')
-    # encrypted_string = str(encrypted_data)
-    # print('ok: ', encrypted_data.ok)
-    # print('status: ', encrypted_data.status)
-    # print('stderr: ', encrypted_data.stderr)
-    # print('unencrypted_string: ', unencrypted_string)
-    # print('encrypted_string: ', encrypted_string)
+    mygpg = gnupg.GPG(gnupghome=mygnupghome)
 
-    # gpg = gnupg.GPG(gnupghome='/home/cosmo/.gpghome')
-    # key_data = open('nnoottiiffyy_sec.asc').read()
-    # import_result = gpg.import_keys(key_data)
-    # pprint(import_result.results)
+    # gpg.test(mygnupghome, username, passwgpg, verbose)
 
-    # mail.send_rmd(username, passwgoo, mailsto, verbose)
+    # msend.send_rmd_test(username, passwgoo, passwgpg, mailsto, mygpg, verbose)
+
+    mrecv.recv_rmd_test(username, passwgoo, passwgpg, mygpg, verbose)
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
