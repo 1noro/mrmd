@@ -106,5 +106,7 @@ venv.bak/
 # by inoro
 cred.txt
 mailto.txt
+mailto.list
+mailsto.list
 mailfrom.txt
 login.conf

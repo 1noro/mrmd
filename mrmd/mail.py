@@ -1,15 +1,47 @@
 # modules.mail
 # by inoro
 
-### IMPORTS ####################################################################
+### IMPORTS ###################################################################
 import socket
 import ssl
 import base64
 import datetime
 
+import smtplib
+
 import mrmd.log as log
 
-### FUNCTIONS ##################################################################
+### FUNCTIONS #################################################################
+def send_rmd(gmail_user, gmail_password, mailsto, verbose):
+    to = ""
+    if len(mailsto) > 1: to = ", ".join(mailsto)
+    else: to = mailsto[0]
+
+    sent_from = gmail_user
+    subject = 'OMG Super Important Message2'
+    body = 'Hey, what\'s up?\r\n--\r\nYou kjdash'
+
+    now = datetime.datetime.now()
+    bnow = now.strftime("%a, %d %b %Y %H:%M:%S -0700 (PDT)").encode('utf-8')
+
+    email_text =    "From: " + sent_from + "\r\n" \
+                    "To: " + to + "\r\n" \
+                    "Subject: " + subject + "\r\n" \
+                    "\r\n" \
+                    "" + body + "\r\n"
+
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(gmail_user, gmail_password)
+        server.sendmail(sent_from, to, email_text)
+        server.close()
+        print('Email sent!')
+    except:
+        print('Something went wrong...')
+
+# -----------------------------------------------------------------------------
+
 def by_b64(by):
     b64 = base64.b64encode(by)
     return b64
@@ -79,9 +111,5 @@ def send(us, ps, mailfrom, mailsto, myip, mylastip, verbose):
 
     mysslsend(sslsock, b'QUIT\r\n','250', verbose)
 
-
     sslsock.close()
     sock.close()
-
-def send_rmd(verbose):
-    pass
