@@ -23,14 +23,13 @@ def get_unseen_mails(username, passwgoo, mygpg, passwgpg, verbose):
     (retcode, messages) = conn.search(None, '(UNSEEN)')
     if retcode == 'OK' and messages[0] != b'':
         for num in messages[0].split(b' '):
-            # print('Processing :', num)
             typ, data = conn.fetch(num,'(RFC822)')
             msg = email.parser.BytesParser(policy=email.policy.default).parsebytes(data[0][1], headersonly=False)
-            mail_arr.append(RecMail(msg))
+            # comprobamos que el formato del mensaje sea el correcto
+            if msg['subject'] == 'r' and msg.get_content_type() == 'multipart/encrypted':
+                mail_arr.append(RecMail(msg))
             typ, data = conn.store(num,'-FLAGS','\\Seen') # desmarcamaos el mensaje como leido
             # typ, data = conn.store(num,'+FLAGS','\\Seen') # marcamos como leido el mensaje (no hace falta, es automático)
-            # print(data,'\n',30*'-')
-            # print(msg)
 
     conn.close()
     return mail_arr

@@ -60,18 +60,14 @@ def main():
         sys.exit()
 
     # --- EXECUTION -----------------------------------------------------------
+    # abrimos nuestro depósito de claves gpg
     mygpg = gnupg.GPG(gnupghome=mygnupghome)
 
-    # gpg.test(mygnupghome, username, passwgpg, verbose)
-    # gpg.test5(mygnupghome, username, passwgpg, verbose)
-
-    # msend.send_rmd_test(username, passwgoo, passwgpg, mailsto, mygpg, verbose)
-
-    # mrecv.recv_rmd_test(username, passwgoo, passwgpg, mygpg, verbose)
+    # leemos los correos nuevos
     mail_arr = mrecv.get_unseen_mails(username, passwgoo, mygpg, passwgpg, verbose)
-    # for mail in mail_arr:
-    #     print(mail.getMsgStr())
-    #     print("-" * 78)
+    for mail in mail_arr:
+        print(repr(mail))
+        print("-" * 78)
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
