@@ -113,4 +113,5 @@ login.conf
 *.ign
 tmp/*.enc
 tmp/*.dec
+tmp/*.sig
 tmp/*.asc

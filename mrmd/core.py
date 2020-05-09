@@ -68,9 +68,12 @@ def main():
 
     # procesamos los emails recibidos uno a uno
     for mail in mail_arr:
+        log.p.info("Procesando mail " + mail.getId())
         mail.save_enc()
         mail.decrypt(gpg, passwgpg)
+        mail.verify(gpg)
         # mail.clear(verbose)
+        if mail.getVerified(): print("Verified!")
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
