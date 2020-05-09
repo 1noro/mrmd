@@ -2,10 +2,42 @@
 import datetime
 import imaplib
 import email
+import email.parser
+import email.policy
 
 import mrmd.log as log
+import mrmd.RecMail
+from mrmd.RecMail import RecMail
 
 ### FUNCTIONS #################################################################
+def get_unseen_mails(username, passwgoo, mygpg, passwgpg, verbose):
+    mail_arr = []
+    conn = imaplib.IMAP4_SSL('imap.gmail.com')
+    try:
+        (retcode, capabilities) = conn.login(username, passwgoo)
+    except:
+        print(sys.exc_info()[1])
+        sys.exit(1)
+
+    conn.select("inbox")
+    (retcode, messages) = conn.search(None, '(UNSEEN)')
+    if retcode == 'OK' and messages[0] != b'':
+        for num in messages[0].split(b' '):
+            # print('Processing :', num)
+            typ, data = conn.fetch(num,'(RFC822)')
+            # msg = quopri.decodestring(email.message_from_string(data[0][1].decode("utf-8")))
+            # msg = email.message_from_string(data[0][1].decode("utf-8"))
+            msg = email.parser.BytesParser(policy=email.policy.default).parsebytes(data[0][1], headersonly=False)
+            mail_arr.append(RecMail(msg))
+            typ, data = conn.store(num,'-FLAGS','\\Seen') # desmarcamaos el mensaje como leido
+            # typ, data = conn.store(num,'+FLAGS','\\Seen') # marcamos como leido el mensaje (no hace falta, es automático)
+            # print(data,'\n',30*'-')
+            # print(msg)
+
+    conn.close()
+    return mail_arr
+
+# -----------------------------------------------------------------------------
 def recv_rmd_test(username, passwgoo, passwgpg, mygpg, verbose):
     # mail = imaplib.IMAP4_SSL('imap.gmail.com')
     # mail.login(username, passwgoo)
