@@ -25,8 +25,6 @@ def get_unseen_mails(username, passwgoo, mygpg, passwgpg, verbose):
         for num in messages[0].split(b' '):
             # print('Processing :', num)
             typ, data = conn.fetch(num,'(RFC822)')
-            # msg = quopri.decodestring(email.message_from_string(data[0][1].decode("utf-8")))
-            # msg = email.message_from_string(data[0][1].decode("utf-8"))
             msg = email.parser.BytesParser(policy=email.policy.default).parsebytes(data[0][1], headersonly=False)
             mail_arr.append(RecMail(msg))
             typ, data = conn.store(num,'-FLAGS','\\Seen') # desmarcamaos el mensaje como leido

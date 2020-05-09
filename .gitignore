@@ -111,3 +111,6 @@ mailsto.list
 mailfrom.txt
 login.conf
 *.ign
+tmp/*.enc
+tmp/*.dec
+tmp/*.asc
