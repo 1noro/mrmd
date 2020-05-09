@@ -134,14 +134,18 @@ class RecMail:
             file.close()
 
     def verify(self, gpg):
+        # gpg --sign -u <user> --armor --detach-sign <doc>
+        # gpg --verify <doc.sig> <doc>
         file = open(self.sig_filename, 'rb')
         try:
             verified = gpg.verify_file(file, self.dec_filename)
             # pprint(dir(verified))
-            # print(bool(verified))
+            print(verified.stderr) # no se firma bien, ¿porqué?
             if verified.username != None:
                 self.verified = True
         # except:
         #     log.p.fail("No se pudo leer de '" + self.sig_filename + "'.")
         finally:
             file.close()
+
+# probar a crear 2 home folders para tener las firmas en sitios diferentes
