@@ -1,5 +1,6 @@
 
-import datetime
+import datetime # creo que es prescindible
+
 import imaplib
 import email
 import email.parser
@@ -10,7 +11,7 @@ import mrmd.RecMail
 from mrmd.RecMail import RecMail
 
 ### FUNCTIONS #################################################################
-def get_unseen_mails(username, passwgoo, mygpg, passwgpg, verbose):
+def get_unseen_mails(username, passwgoo, verbose):
     mail_arr = []
     conn = imaplib.IMAP4_SSL('imap.gmail.com')
     try:

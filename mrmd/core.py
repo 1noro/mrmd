@@ -61,13 +61,16 @@ def main():
 
     # --- EXECUTION -----------------------------------------------------------
     # abrimos nuestro depósito de claves gpg
-    mygpg = gnupg.GPG(gnupghome=mygnupghome)
+    gpg = gnupg.GPG(gnupghome=mygnupghome)
 
     # leemos los correos nuevos
-    mail_arr = mrecv.get_unseen_mails(username, passwgoo, mygpg, passwgpg, verbose)
+    mail_arr = mrecv.get_unseen_mails(username, passwgoo, verbose)
+
+    # procesamos los emails recibidos uno a uno
     for mail in mail_arr:
-        print(repr(mail))
-        print("-" * 78)
+        mail.save_enc()
+        mail.decrypt(gpg, passwgpg)
+        # mail.clear(verbose)
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
