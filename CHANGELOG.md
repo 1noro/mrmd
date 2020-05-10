@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## 0.0.2 - 2019-09-20
 > by inoro <ppuubblliicc@protonmail.com>
 ### Added
-- Ya funciona la recepción y guardado de reminders.
+- Ya funciona la recepción y guardado de reminders con cifrado y firma inline.
 
 ## 0.0.1 - 2019-09-20
 > by inoro <ppuubblliicc@protonmail.com>
