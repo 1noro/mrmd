@@ -9,6 +9,7 @@ import email.policy
 import mrmd.log as log
 import mrmd.RecMail
 from mrmd.RecMail import RecMail
+from mrmd.RecMailPlain import RecMailPlain
 
 ### FUNCTIONS #################################################################
 def get_unseen_mails(username, passwgoo, verbose):
@@ -27,8 +28,10 @@ def get_unseen_mails(username, passwgoo, verbose):
             typ, data = conn.fetch(num,'(RFC822)')
             msg = email.parser.BytesParser(policy=email.policy.default).parsebytes(data[0][1], headersonly=False)
             # comprobamos que el formato del mensaje sea el correcto
-            if msg['subject'] == 'r' and msg.get_content_type() == 'multipart/encrypted':
+            if msg['subject'] == 'r' and (msg.get_content_type() == 'multipart/encrypted' or msg.get_content_type() == 'multipart/signed'):
                 mail_arr.append(RecMail(msg))
+            elif msg['subject'] == 'r' and msg.get_content_type() == 'text/plain':
+                mail_arr.append(RecMailPlain(msg))
             typ, data = conn.store(num,'-FLAGS','\\Seen') # desmarcamaos el mensaje como leido
             # typ, data = conn.store(num,'+FLAGS','\\Seen') # marcamos como leido el mensaje (no hace falta, es automático)
 

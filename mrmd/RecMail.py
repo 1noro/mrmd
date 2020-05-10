@@ -117,6 +117,17 @@ class RecMail:
         finally:
             file.close()
 
+    def save_junto(self, msg, sign):
+        file = open(self.dec_filename, 'wb')
+        try:
+            file.write(b'-----BEGIN PGP SIGNED MESSAGE-----\r\nHash: SHA256\r\n\r\n')
+            file.write(msg.get_payload(decode=True))
+            file.write(sign.get_payload(decode=True))
+        except:
+            log.p.fail("No se pudo grabar en '" + self.dec_filename + "'.")
+        finally:
+            file.close()
+
     def decrypt(self, gpg, passwgpg):
         dec_msg = None
         file = open(self.enc_filename, 'rb')
@@ -126,8 +137,12 @@ class RecMail:
 
             dec_msg = email.parser.BytesParser(policy=email.policy.default).parsebytes(dec_obj.data, headersonly=False)
 
-            self.save_dec(dec_msg.get_payload()[0])
-            self.save_sig(dec_msg.get_payload()[1])
+            if isinstance(dec_msg.get_payload(), str):
+                self.save_dec(dec_msg)
+            else:
+                # self.save_dec(dec_msg.get_payload()[0])
+                # self.save_sig(dec_msg.get_payload()[1])
+                self.save_junto(dec_msg.get_payload()[0], dec_msg.get_payload()[1])
         # except:
         #     log.p.fail("No se pudo leer de '" + self.enc_filename + "'.")
         finally:
@@ -136,13 +151,14 @@ class RecMail:
     def verify(self, gpg):
         # gpg --sign -u <user> --armor --detach-sign <doc>
         # gpg --verify <doc.sig> <doc>
-        file = open(self.sig_filename, 'rb')
+        file = open(self.enc_filename, 'rb')
         try:
-            verified = gpg.verify_file(file, self.dec_filename)
+            # verified = gpg.verify_file(file, self.dec_filename)
+            verified = gpg.verify_file(file)
             # pprint(dir(verified))
             print(verified.stderr) # no se firma bien, ¿porqué?
-            if verified.username != None:
-                self.verified = True
+            # if verified.username != None:
+            #     self.verified = True
         # except:
         #     log.p.fail("No se pudo leer de '" + self.sig_filename + "'.")
         finally:
