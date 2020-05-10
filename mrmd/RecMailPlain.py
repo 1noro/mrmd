@@ -114,6 +114,10 @@ class RecMailPlain:
             if record: out.append(line)
         return out
 
+    def get_text_between_brackets(self, text):
+        pattern = r"<(.*?)>"
+        return re.findall(pattern, text, flags=0)[0]
+
     def save_rmd(self, gpg, passwgpg, dir, name, verbose):
         dec_msg = self.decrypt(gpg, passwgpg).decode('utf-8')
         dec_msg_lines = None
@@ -132,6 +136,7 @@ class RecMailPlain:
         if dec_msg_lines[0] == 'today' or dec_msg_lines[0] == '0': day = utils.get_today()
         else: day = dec_msg_lines[0]
         hour = dec_msg_lines[1].replace('.', ':').replace('-', ':')
+        mailto = self.get_text_between_brackets(self.mail_from)
         subject = ""
         if dec_msg_lines[2] == "": subject = "Reminder"
         else: subject = dec_msg_lines[2]
@@ -147,12 +152,14 @@ class RecMailPlain:
 
         # log.pt.info("day: " + day, name)
         # log.pt.info("hour: " + hour, name)
+        # log.pt.info("mailto: " + mailto, name)
         # log.pt.info("subject: " + subject, name)
         # log.pt.info("rmd_msg: " + rmd_msg, name)
 
         rmd_filename = dir + day + "_" + hour + "_" + self.id + ".rmd"
         try:
             file = open(rmd_filename, 'wb')
+            file.write((mailto + '\n').encode('utf-8'))
             file.write((subject + '\n').encode('utf-8'))
             file.write((rmd_msg).encode('utf-8'))
             file.close()
