@@ -31,7 +31,7 @@ def get_unseen_mails(username, passwgoo, name, verbose):
             if msg['subject'] == 'r' and (msg.get_content_type() == 'multipart/encrypted' or msg.get_content_type() == 'multipart/signed'):
                 mail_arr.append(RecMail(msg))
             elif msg['subject'] == 'r' and msg.get_content_type() == 'text/plain':
-                mail_arr.append(RecMailPlain(msg))
+                mail_arr.append(RecMailPlain(msg, name))
             # typ, data = conn.store(num,'-FLAGS','\\Seen') # desmarcamaos el mensaje como leido
             # typ, data = conn.store(num,'+FLAGS','\\Seen') # marcamos como leido el mensaje (no hace falta, es automático)
 

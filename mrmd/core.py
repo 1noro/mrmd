@@ -12,7 +12,6 @@ from mrmd import utils
 from mrmd import log
 from mrmd import msend
 from mrmd import mrecv
-from mrmd import gpg
 
 ### EDITABLE VARIABLES ########################################################
 LOGIN_FILE = "config/login.conf"
@@ -91,7 +90,7 @@ def main():
     # --- EXECUTION -----------------------------------------------------------
     # sincronizamos la ejecución con los minutos del sistema
     if verbose >= 1: log.p.info("Sincronizando la ejecución con los minutos del sistema.")
-    while utils.get_sec() != "00": time.sleep(1)
+    while not utils.get_sec() == "00" and not utils.get_sec() == "30": time.sleep(1)
 
     # abrimos nuestro depósito de claves gpg
     gpg = gnupg.GPG(gnupghome=mygnupghome)

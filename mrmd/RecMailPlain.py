@@ -1,5 +1,5 @@
 
-from pprint import pprint # solo para tests
+# from pprint import pprint # solo para tests
 
 import re
 import os
@@ -27,7 +27,7 @@ class RecMailPlain:
     valid = False
     verified = False
 
-    def __init__(self, msg):
+    def __init__(self, msg, name):
         self.id = utils.get_unique_date()
 
         self.msg = msg

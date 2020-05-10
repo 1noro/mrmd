@@ -1,5 +1,7 @@
 
 import smtplib
+from email.message import Message
+from email.header import Header
 
 import mrmd.log as log
 import mrmd.utils as utils
@@ -21,7 +23,11 @@ def send_rmd_plain(gmail_user, gmail_password, gpg, passwgpg, rmd_filename, name
         to = rmd_lines[0]
         date = utils.get_sendmail_date()
         sent_from = gmail_user
-        subject = rmd_lines[1]
+
+        msg = Message()
+        h = Header(rmd_lines[1], 'utf-8')
+        msg['Subject'] = h
+        subject = msg.as_string().replace('\n\n', '')
 
         rmd_lines.remove(rmd_lines[0])
         rmd_lines.remove(rmd_lines[0])
@@ -33,7 +39,8 @@ def send_rmd_plain(gmail_user, gmail_password, gpg, passwgpg, rmd_filename, name
         if passwgpg != "": body = gpg.encrypt(body, to, sign=gmail_user, passphrase=passwgpg)
         else: body = gpg.encrypt(body, to, sign=gmail_user)
 
-        email_text =    "Subject: " + subject + "\r\n" \
+        # "Subject: " + subject + "\r\n" \
+        email_text =    "" + subject + "\r\n" \
                         "From: " + sent_from + "\r\n" \
                         "To: " + to + "\r\n" \
                         "Date: " + date + "\r\n" \
@@ -43,6 +50,8 @@ def send_rmd_plain(gmail_user, gmail_password, gpg, passwgpg, rmd_filename, name
                         "\r\n" \
                         "" + body.data.decode('utf-8') + ""
 
+        print(email_text)
+
         try:
             server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
             server.ehlo()
@@ -51,7 +60,7 @@ def send_rmd_plain(gmail_user, gmail_password, gpg, passwgpg, rmd_filename, name
             server.close()
             if verbose >= 2: log.pt.ok('Email enviado para ' + rmd_filename + '.', name)
         except:
-            log.pt.fail('Algo fue mal, el email para' + rmd_filename + 'NO fué enviado.', name)
+            log.pt.fail('Algo fue mal, el email para ' + rmd_filename + ' NO fué enviado.', name)
 
 # ------------------------------------------------------------------------------
 def send_rmd_test(gmail_user, gmail_password, passwgpg, mailsto, gpg, verbose):
