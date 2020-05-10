@@ -24,7 +24,7 @@ LOOP_TIME = 30
 ### AUTOMATIC VARIABLES #######################################################
 verbose = 0
 # version=open("version.txt").read().replace('\n','')
-version="0.0.2"
+version="0.0.3"
 username = ""
 passwgoo = ""
 passwgpg = ""
@@ -89,11 +89,15 @@ def main():
         sys.exit()
 
     # --- EXECUTION -----------------------------------------------------------
+    # sincronizamos la ejecución con los minutos del sistema
+    if verbose >= 1: log.p.info("Sincronizando la ejecución con los minutos del sistema.")
+    while utils.get_sec() != "00": time.sleep(1)
+
     # abrimos nuestro depósito de claves gpg
     gpg = gnupg.GPG(gnupghome=mygnupghome)
 
     while True:
-        if (verbose >= 1) and loop: log.p.loop("["+utils.get_new_strtime()+"] beginning of the cycle")
+        if verbose >= 1 and loop: log.p.loop("["+utils.get_new_strtime()+"] beginning of the cycle")
         check_mails_t = threading.Thread(target=check_mails, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
         check_reminders_t = threading.Thread(target=check_reminders, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_r", verbose))
         check_reminders_t.start()
