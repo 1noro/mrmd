@@ -84,7 +84,7 @@ class RecMailPlain:
         verified = gpg.verify(self.decrypt(gpg, passwgpg))
         # print(verified.stderr)
         if verified:
-            if verbose >= 2: log.pt.ok("El mensaje " + self.id + " está verificado.", name)
+            if verbose >= 3: log.pt.ok("El mensaje " + self.id + " está verificado.", name)
             self.verified = True
         else:
             # probamos a verificar con la firma en el propio mensaje encriptado
@@ -92,12 +92,12 @@ class RecMailPlain:
             if passwgpg != "": dec_obj = gpg.decrypt(self.msg_cont_enc, passphrase=passwgpg)
             else: dec_obj = gpg.decrypt(self.msg_cont_enc)
             if dec_obj.trust_level is not None and dec_obj.trust_level >= dec_obj.TRUST_FULLY:
-                if verbose >= 2: log.pt.ok("El mensaje " + self.id + " está verificado.", name)
+                if verbose >= 3: log.pt.ok("El mensaje " + self.id + " está verificado.", name)
                 self.verified = True
             else:
                 log.pt.fail("El mensaje " + self.id + " NO está verificado o el nivel de confianza no es el adecuado.", name)
 
-    def rm_sig_msg_head(self, txt):
+    def remove_sig_msg_head(self, txt):
         record = False
         out = ""
         txt_lines = txt.split('\n')
@@ -106,7 +106,7 @@ class RecMailPlain:
             if (not record) and line == "": record = True
         return out
 
-    def rm_mail_sig(self, txt_lines):
+    def remove_mail_sig(self, txt_lines):
         record = True
         out = []
         for line in txt_lines:
@@ -120,12 +120,12 @@ class RecMailPlain:
         pattern = re.compile("-----BEGIN PGP SIGNED MESSAGE-----")
         if pattern.match(dec_msg):
             if verbose >= 3: log.pt.info("El mensaje " + self.id + " es del tipo: BEGIN PGP SIGNED MESSAGE.", name)
-            dec_msg = self.rm_sig_msg_head(dec_msg)
+            dec_msg = self.remove_sig_msg_head(dec_msg)
 
         # dividimos el mensaje en líneas
         dec_msg = dec_msg.replace('\r', '')
         dec_msg_lines = dec_msg.split('\n')
-        dec_msg_lines = self.rm_mail_sig(dec_msg_lines)
+        dec_msg_lines = self.remove_mail_sig(dec_msg_lines)
 
         # cada linea es una cosa por lo que voy leyendo linea a linea y asignando variables
         day = ""
@@ -142,10 +142,20 @@ class RecMailPlain:
         dec_msg_lines.remove(dec_msg_lines[0])
 
         # el resto es mensaje para el recordatorio
-        rm_msg = ""
-        for line in dec_msg_lines: rm_msg += line + '\n'
+        rmd_msg = ""
+        for line in dec_msg_lines: rmd_msg += line + '\n'
 
-        log.pt.info("day: " + day, name)
-        log.pt.info("hour: " + hour, name)
-        log.pt.info("subject: " + subject, name)
-        log.pt.info("rm_msg: " + rm_msg, name)
+        # log.pt.info("day: " + day, name)
+        # log.pt.info("hour: " + hour, name)
+        # log.pt.info("subject: " + subject, name)
+        # log.pt.info("rmd_msg: " + rmd_msg, name)
+
+        rmd_filename = dir + day + "_" + hour + "_" + self.id + ".rmd"
+        try:
+            file = open(rmd_filename, 'wb')
+            file.write((subject + '\n').encode('utf-8'))
+            file.write((rmd_msg).encode('utf-8'))
+            file.close()
+            if verbose >= 2: log.pt.ok("Se ha guardado " + rmd_filename, name)
+        except:
+            log.pt.fail("No se pudo grabar en '" + rmd_filename + "'.", name)

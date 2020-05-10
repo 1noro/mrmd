@@ -13,13 +13,13 @@ from mrmd import gpg
 ### EDITABLE VARIABLES ########################################################
 LOGIN_FILE = "config/login.conf"
 MAILSTO_FILE = "config/mailsto.list"
-RMD_DIR = "tmp/"
+RMD_DIR = "rmd/"
 TABULAR = " " * 8
 
 ### AUTOMATIC VARIABLES #######################################################
 verbose = 0
 # version=open("version.txt").read().replace('\n','')
-version="0.0.1"
+version="0.0.2"
 username = ""
 passwgoo = ""
 passwgpg = ""
@@ -28,7 +28,7 @@ mailsto = []
 mygnupghome = os.environ['HOME'] + "/.gpgpy"
 
 ### FUNCTIONS #################################################################
-def check_mail(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
+def check_mails(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
     # leemos los correos nuevos
     mail_arr = mrecv.get_unseen_mails(username, passwgoo, name, verbose)
     # procesamos los emails recibidos uno a uno
@@ -37,6 +37,9 @@ def check_mail(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
         if mail.getValid():
             mail.verify(gpg, passwgpg, name, verbose)
             if mail.getVerified(): mail.save_rmd(gpg, passwgpg, RMD_DIR, name, verbose)
+
+def check_reminders(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
+    print("holi")
 
 ### MAIN ######################################################################
 def main():
@@ -73,9 +76,11 @@ def main():
     # --- EXECUTION -----------------------------------------------------------
     # abrimos nuestro depósito de claves gpg
     gpg = gnupg.GPG(gnupghome=mygnupghome)
-    check_mail_t = threading.Thread(target=check_mail, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
+    check_mails_t = threading.Thread(target=check_mails, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
+    check_reminders_t = threading.Thread(target=check_reminders, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_r", verbose))
 
-    check_mail_t.start()
+    # check_mails_t.start()
+    check_reminders_t.start()
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
