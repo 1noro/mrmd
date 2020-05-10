@@ -31,7 +31,6 @@ mygnupghome = os.environ['HOME'] + "/.gpgpy"
 def check_mail(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
     # leemos los correos nuevos
     mail_arr = mrecv.get_unseen_mails(username, passwgoo, name, verbose)
-
     # procesamos los emails recibidos uno a uno
     for mail in mail_arr:
         log.pt.info("Procesando mail " + mail.getId(), )

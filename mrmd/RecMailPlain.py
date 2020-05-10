@@ -121,17 +121,31 @@ class RecMailPlain:
         if pattern.match(dec_msg):
             if verbose >= 3: log.pt.info("El mensaje " + self.id + " es del tipo: BEGIN PGP SIGNED MESSAGE.", name)
             dec_msg = self.rm_sig_msg_head(dec_msg)
+
+        # dividimos el mensaje en líneas
         dec_msg = dec_msg.replace('\r', '')
         dec_msg_lines = dec_msg.split('\n')
         dec_msg_lines = self.rm_mail_sig(dec_msg_lines)
 
-        day = dec_msg_lines[0]
-        hour = dec_msg_lines[1]
-        subjetc = dec_msg_lines[2]
+        # cada linea es una cosa por lo que voy leyendo linea a linea y asignando variables
+        day = ""
+        if dec_msg_lines[0] == 'today' or dec_msg_lines[0] == '0': day = utils.get_today()
+        else: day = dec_msg_lines[0]
+        hour = dec_msg_lines[1].replace('.', ':').replace('-', ':')
+        subject = ""
+        if dec_msg_lines[2] == "": subject = "Reminder"
+        else: subject = dec_msg_lines[2]
 
-        dec_msg_lines.remove(day)
-        dec_msg_lines.remove(hour)
-        dec_msg_lines.remove(subjetc)
+        # borro las lineas de day, hour y subject para que el resto sea solo texto
+        dec_msg_lines.remove(dec_msg_lines[0])
+        dec_msg_lines.remove(dec_msg_lines[0])
+        dec_msg_lines.remove(dec_msg_lines[0])
 
-        for line in dec_msg_lines:
-            print("linea:", line)
+        # el resto es mensaje para el recordatorio
+        rm_msg = ""
+        for line in dec_msg_lines: rm_msg += line + '\n'
+
+        log.pt.info("day: " + day, name)
+        log.pt.info("hour: " + hour, name)
+        log.pt.info("subject: " + subject, name)
+        log.pt.info("rm_msg: " + rm_msg, name)

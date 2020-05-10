@@ -36,6 +36,9 @@ def get_new_strtime():
 def get_unique_date():
     return datetime.datetime.now().strftime("%Y%m%d%H%M%S-%f")
 
+def get_today():
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
 # -----------------------------------------------------------------------------
 def get_sig_blk(str):
     out = ""
