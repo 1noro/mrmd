@@ -1,6 +1,4 @@
-# core.logs
-# by inoro
-
+# core.logsprint
 ### CLASSES ###################################################################
 class bcolor:
     NONE = ''
@@ -26,3 +24,16 @@ class p:
     def cout(txt):      print(bcolor.INFO       + "[--> ] " + txt + bcolor.ENDC)
     def sslcin(txt):    print(bcolor.INFO       + "[ <~~] " + txt + bcolor.ENDC)
     def sslcout(txt):   print(bcolor.INFO       + "[~~> ] " + txt + bcolor.ENDC)
+
+class pt:
+    def info(txt, name = 'main'):      print(bcolor.INFO       + "[INFO] " + name + ": " + txt + bcolor.ENDC)
+    def sinfo(txt, name = 'main'):     print(bcolor.HEADER     + "[INFO] " + name + ": " + txt + bcolor.ENDC)
+    def ok(txt, name = 'main'):        print(bcolor.OKGREEN    + "[ OK ] " + name + ": " + txt + bcolor.ENDC)
+    def warning(txt, name = 'main'):   print(bcolor.WARNING    + "[WARN] " + name + ": " + txt + bcolor.ENDC)
+    def fail(txt, name = 'main'):      print(bcolor.FAIL       + "[FAIL] " + name + ": " + txt + bcolor.ENDC)
+    def exit(txt, name = 'main'):      print(bcolor.OKBLUE     + "[EXIT] " + name + ": " + txt + bcolor.ENDC)
+    def loop(txt, name = 'main'):      print(bcolor.OKBLUE     + "[LOOP] " + name + ": " + txt + bcolor.ENDC)
+    def cin(txt, name = 'main'):       print(bcolor.INFO       + "[ <--] " + name + ": " + txt + bcolor.ENDC)
+    def cout(txt, name = 'main'):      print(bcolor.INFO       + "[--> ] " + name + ": " + txt + bcolor.ENDC)
+    def sslcin(txt, name = 'main'):    print(bcolor.INFO       + "[ <~~] " + name + ": " + txt + bcolor.ENDC)
+    def sslcout(txt, name = 'main'):   print(bcolor.INFO       + "[~~> ] " + name + ": " + txt + bcolor.ENDC)

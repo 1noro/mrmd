@@ -12,13 +12,13 @@ from mrmd.RecMail import RecMail
 from mrmd.RecMailPlain import RecMailPlain
 
 ### FUNCTIONS #################################################################
-def get_unseen_mails(username, passwgoo, verbose):
+def get_unseen_mails(username, passwgoo, name, verbose):
     mail_arr = []
     conn = imaplib.IMAP4_SSL('imap.gmail.com')
     try:
         (retcode, capabilities) = conn.login(username, passwgoo)
     except:
-        print(sys.exc_info()[1])
+        log.pt.fail(sys.exc_info()[1], name)
         sys.exit(1)
 
     conn.select("inbox")

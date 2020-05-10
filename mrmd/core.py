@@ -1,5 +1,6 @@
 
 import os
+import threading
 import gnupg
 
 import mrmd
@@ -27,7 +28,16 @@ mailsto = []
 mygnupghome = os.environ['HOME'] + "/.gpgpy"
 
 ### FUNCTIONS #################################################################
-# ...
+def check_mail(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
+    # leemos los correos nuevos
+    mail_arr = mrecv.get_unseen_mails(username, passwgoo, name, verbose)
+
+    # procesamos los emails recibidos uno a uno
+    for mail in mail_arr:
+        log.pt.info("Procesando mail " + mail.getId(), )
+        if mail.getValid():
+            mail.verify(gpg, passwgpg, name, verbose)
+            if mail.getVerified(): mail.save_rmd(gpg, passwgpg, RMD_DIR, name, verbose)
 
 ### MAIN ######################################################################
 def main():
@@ -64,16 +74,9 @@ def main():
     # --- EXECUTION -----------------------------------------------------------
     # abrimos nuestro depósito de claves gpg
     gpg = gnupg.GPG(gnupghome=mygnupghome)
+    check_mail_t = threading.Thread(target=check_mail, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
 
-    # leemos los correos nuevos
-    mail_arr = mrecv.get_unseen_mails(username, passwgoo, verbose)
-
-    # procesamos los emails recibidos uno a uno
-    for mail in mail_arr:
-        log.p.info("Procesando mail " + mail.getId())
-        if mail.getValid():
-            mail.verify(gpg, passwgpg, verbose)
-            if mail.getVerified(): mail.save_rmd(gpg, passwgpg, RMD_DIR, verbose)
+    check_mail_t.start()
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")

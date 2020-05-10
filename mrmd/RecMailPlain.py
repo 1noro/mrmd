@@ -41,10 +41,10 @@ class RecMailPlain:
         self.msg_cont_enc = msg.get_content()
         pattern = re.compile("-----BEGIN PGP MESSAGE-----")
         if pattern.match(self.msg_cont_enc):
-            # log.p.ok("El mensaje " + self.id + " está encriptado.")
+            # log.pt.ok("El mensaje " + self.id + " está encriptado.", name)
             self.valid = True
         else:
-            log.p.fail("El mensaje " + self.id + " NO está encriptado.")
+            log.pt.fail("El mensaje " + self.id + " NO está encriptado.", name)
 
     def getMsg(self):
         return self.msg
@@ -78,13 +78,13 @@ class RecMailPlain:
         # print(dec_obj.stderr)
         return dec_obj.data
 
-    def verify(self, gpg, passwgpg, verbose):
+    def verify(self, gpg, passwgpg, name, verbose):
         verified = False
         # probamos a verificar con la firma junoto al mensaje desencriptado (BEGIN PGP SIGNED MESSAGE)
         verified = gpg.verify(self.decrypt(gpg, passwgpg))
         # print(verified.stderr)
         if verified:
-            if verbose >= 2: log.p.ok("El mensaje " + self.id + " está verificado.")
+            if verbose >= 2: log.pt.ok("El mensaje " + self.id + " está verificado.", name)
             self.verified = True
         else:
             # probamos a verificar con la firma en el propio mensaje encriptado
@@ -92,10 +92,10 @@ class RecMailPlain:
             if passwgpg != "": dec_obj = gpg.decrypt(self.msg_cont_enc, passphrase=passwgpg)
             else: dec_obj = gpg.decrypt(self.msg_cont_enc)
             if dec_obj.trust_level is not None and dec_obj.trust_level >= dec_obj.TRUST_FULLY:
-                if verbose >= 2: log.p.ok("El mensaje " + self.id + " está verificado.")
+                if verbose >= 2: log.pt.ok("El mensaje " + self.id + " está verificado.", name)
                 self.verified = True
             else:
-                log.p.fail("El mensaje " + self.id + " NO está verificado o el nivel de confianza no es el adecuado.")
+                log.pt.fail("El mensaje " + self.id + " NO está verificado o el nivel de confianza no es el adecuado.", name)
 
     def rm_sig_msg_head(self, txt):
         record = False
@@ -114,12 +114,12 @@ class RecMailPlain:
             if record: out.append(line)
         return out
 
-    def save_rmd(self, gpg, passwgpg, dir, verbose):
+    def save_rmd(self, gpg, passwgpg, dir, name, verbose):
         dec_msg = self.decrypt(gpg, passwgpg).decode('utf-8')
         dec_msg_lines = None
         pattern = re.compile("-----BEGIN PGP SIGNED MESSAGE-----")
         if pattern.match(dec_msg):
-            if verbose >= 3: log.p.info("El mensaje " + self.id + " es del tipo: BEGIN PGP SIGNED MESSAGE.")
+            if verbose >= 3: log.pt.info("El mensaje " + self.id + " es del tipo: BEGIN PGP SIGNED MESSAGE.", name)
             dec_msg = self.rm_sig_msg_head(dec_msg)
         dec_msg = dec_msg.replace('\r', '')
         dec_msg_lines = dec_msg.split('\n')
