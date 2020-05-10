@@ -2,6 +2,8 @@
 import os
 import threading
 import gnupg
+from os import listdir
+from os.path import isfile, join
 
 import mrmd
 from mrmd import utils
@@ -39,7 +41,15 @@ def check_mails(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
             if mail.getVerified(): mail.save_rmd(gpg, passwgpg, RMD_DIR, name, verbose)
 
 def check_reminders(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
-    print("holi")
+    # metemos en una lista todos los archivos de la carpeta de recordatorios
+    all_rmd = [f for f in listdir(RMD_DIR) if isfile(join(RMD_DIR, f))]
+    now_rmd = []
+    # comprobamos cuales de los recordatorios tenemos que enviar ahora
+    for rmd_filename in all_rmd:
+        parts = rmd_filename.split('_')
+        if parts[0] <= utils.get_today() and parts[1] <= utils.get_hour():
+            now_rmd.append(rmd_filename)
+    print(now_rmd)
 
 ### MAIN ######################################################################
 def main():

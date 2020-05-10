@@ -134,8 +134,8 @@ class RecMailPlain:
         # cada linea es una cosa por lo que voy leyendo linea a linea y asignando variables
         day = ""
         if dec_msg_lines[0] == 'today' or dec_msg_lines[0] == '0': day = utils.get_today()
-        else: day = dec_msg_lines[0]
-        hour = dec_msg_lines[1].replace('.', ':').replace('-', ':')
+        else: day = dec_msg_lines[0] # hay que comprobar que las fechas sean con 0s a la izquierda
+        hour = dec_msg_lines[1].replace('.', ':').replace('-', ':') # hay que comprobar que las horas sean con 0s a la izquierda
         mailto = self.get_text_between_brackets(self.mail_from)
         subject = ""
         if dec_msg_lines[2] == "": subject = "Reminder"

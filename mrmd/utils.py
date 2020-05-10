@@ -39,6 +39,9 @@ def get_unique_date():
 def get_today():
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
+def get_hour():
+    return datetime.datetime.now().strftime("%H:%M:%S")
+
 # -----------------------------------------------------------------------------
 def get_sig_blk(str):
     out = ""
