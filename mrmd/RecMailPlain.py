@@ -22,21 +22,13 @@ class RecMailPlain:
     content_type = ""
     subject = ""
 
-    dir = "tmp/"
-    enc_filename = ""
-    enc_realfilename = ""
-    dec_filename = ""
-    sig_filename = ""
-    sig_realfilename = ""
+    msg_cont_enc = ""
 
     valid = False
     verified = False
 
     def __init__(self, msg):
         self.id = utils.get_unique_date()
-        self.enc_filename = self.dir + self.id + ".enc"
-        self.dec_filename = self.dir + self.id + ".dec"
-        self.sig_filename = self.dir + self.id + ".sig"
 
         self.msg = msg
         self.mail_from = msg['from']
@@ -46,19 +38,16 @@ class RecMailPlain:
         self.content_type = msg['Content-Type']
         self.subject = msg['subject']
 
-        msg_cont_enc = self.msg.get_content()
+        self.msg_cont_enc = msg.get_content()
         pattern = re.compile("-----BEGIN PGP MESSAGE-----")
-        if pattern.match(msg_cont_enc):
-            log.p.ok("El mensaje " + self.id + " está encriptado.")
-            valid = True
+        if pattern.match(self.msg_cont_enc):
+            # log.p.ok("El mensaje " + self.id + " está encriptado.")
+            self.valid = True
         else:
             log.p.fail("El mensaje " + self.id + " NO está encriptado.")
 
     def getMsg(self):
         return self.msg
-
-    def setMsg(self, msg):
-        self.msg = msg
 
     def getId(self):
         return self.id
@@ -83,23 +72,66 @@ class RecMailPlain:
     # -------------------------------------------------------------------------
 
     def decrypt(self, gpg, passwgpg):
-        dec_msg = None
+        dec_obj = None
+        if passwgpg != "": dec_obj = gpg.decrypt(self.msg_cont_enc, passphrase=passwgpg)
+        else: dec_obj = gpg.decrypt(self.msg_cont_enc)
+        # print(dec_obj.stderr)
+        return dec_obj.data
 
-        # if passwgpg != "": dec_obj = gpg.decrypt(file, passphrase=passwgpg)
-        # else: dec_obj = gpg.decrypt(file)
+    def verify(self, gpg, passwgpg, verbose):
+        verified = False
+        # probamos a verificar con la firma junoto al mensaje desencriptado (BEGIN PGP SIGNED MESSAGE)
+        verified = gpg.verify(self.decrypt(gpg, passwgpg))
+        # print(verified.stderr)
+        if verified:
+            if verbose >= 2: log.p.ok("El mensaje " + self.id + " está verificado.")
+            self.verified = True
+        else:
+            # probamos a verificar con la firma en el propio mensaje encriptado
+            dec_obj = None
+            if passwgpg != "": dec_obj = gpg.decrypt(self.msg_cont_enc, passphrase=passwgpg)
+            else: dec_obj = gpg.decrypt(self.msg_cont_enc)
+            if dec_obj.trust_level is not None and dec_obj.trust_level >= dec_obj.TRUST_FULLY:
+                if verbose >= 2: log.p.ok("El mensaje " + self.id + " está verificado.")
+                self.verified = True
+            else:
+                log.p.fail("El mensaje " + self.id + " NO está verificado o el nivel de confianza no es el adecuado.")
 
-    def verify(self, gpg):
-        # gpg --sign -u <user> --armor --detach-sign <doc>
-        # gpg --verify <doc.sig> <doc>
-        file = open(self.enc_filename, 'rb')
-        try:
-            # verified = gpg.verify_file(file, self.dec_filename)
-            verified = gpg.verify_file(file)
-            # pprint(dir(verified))
-            print(verified.stderr) # no se firma bien, ¿porqué?
-            # if verified.username != None:
-            #     self.verified = True
-        # except:
-        #     log.p.fail("No se pudo leer de '" + self.sig_filename + "'.")
-        finally:
-            file.close()
+    def rm_sig_msg_head(self, txt):
+        record = False
+        out = ""
+        txt_lines = txt.split('\n')
+        for line in txt_lines:
+            if record: out += line + '\n'
+            if (not record) and line == "": record = True
+        return out
+
+    def rm_mail_sig(self, txt_lines):
+        record = True
+        out = []
+        for line in txt_lines:
+            if record and (line == "- -- " or line == "-- "): record = False
+            if record: out.append(line)
+        return out
+
+    def save_rmd(self, gpg, passwgpg, dir, verbose):
+        dec_msg = self.decrypt(gpg, passwgpg).decode('utf-8')
+        dec_msg_lines = None
+        pattern = re.compile("-----BEGIN PGP SIGNED MESSAGE-----")
+        if pattern.match(dec_msg):
+            if verbose >= 3: log.p.info("El mensaje " + self.id + " es del tipo: BEGIN PGP SIGNED MESSAGE.")
+            dec_msg = self.rm_sig_msg_head(dec_msg)
+        dec_msg = dec_msg.replace('\r', '')
+        dec_msg_lines = dec_msg.split('\n')
+        dec_msg_lines = self.rm_mail_sig(dec_msg_lines)
+
+        day = dec_msg_lines[0]
+        hour = dec_msg_lines[1]
+        subjetc = dec_msg_lines[2]
+
+        dec_msg_lines.remove(day)
+        dec_msg_lines.remove(hour)
+        dec_msg_lines.remove(subjetc)
+
+        for line in dec_msg_lines:
+            print("linea:", line)

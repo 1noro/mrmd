@@ -12,6 +12,7 @@ from mrmd import gpg
 ### EDITABLE VARIABLES ########################################################
 LOGIN_FILE = "config/login.conf"
 MAILSTO_FILE = "config/mailsto.list"
+RMD_DIR = "tmp/"
 TABULAR = " " * 8
 
 ### AUTOMATIC VARIABLES #######################################################
@@ -71,11 +72,8 @@ def main():
     for mail in mail_arr:
         log.p.info("Procesando mail " + mail.getId())
         if mail.getValid():
-            # mail.save_enc()
-            mail.decrypt(gpg, passwgpg)
-            # mail.verify(gpg)
-            # mail.clear(verbose)
-            # if mail.getVerified(): print("Verified!")
+            mail.verify(gpg, passwgpg, verbose)
+            if mail.getVerified(): mail.save_rmd(gpg, passwgpg, RMD_DIR, verbose)
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")
