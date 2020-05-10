@@ -1,7 +1,9 @@
 
 import os
+import sys
 import threading
 import gnupg
+import time
 from os import listdir
 from os.path import isfile, join
 
@@ -17,6 +19,7 @@ LOGIN_FILE = "config/login.conf"
 MAILSTO_FILE = "config/mailsto.list"
 RMD_DIR = "rmd/"
 TABULAR = " " * 8
+LOOP_TIME = 30
 
 ### AUTOMATIC VARIABLES #######################################################
 verbose = 0
@@ -28,6 +31,7 @@ passwgpg = ""
 mailsto = []
 # mygnupghome = os.environ['HOME'] + "/.gnupg"
 mygnupghome = os.environ['HOME'] + "/.gpgpy"
+loop = True
 
 ### FUNCTIONS #################################################################
 def check_mails(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
@@ -43,13 +47,13 @@ def check_mails(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
 def check_reminders(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
     # metemos en una lista todos los archivos de la carpeta de recordatorios
     all_rmd = [f for f in listdir(RMD_DIR) if isfile(join(RMD_DIR, f))]
-    now_rmd = []
-    # comprobamos cuales de los recordatorios tenemos que enviar ahora
+    # comprobamos cuales de los recordatorios tenemos que enviar ahora y los enviamos
     for rmd_filename in all_rmd:
         parts = rmd_filename.split('_')
         if parts[0] <= utils.get_today() and parts[1] <= utils.get_hour():
-            now_rmd.append(rmd_filename)
-    print(now_rmd)
+            # hacer que esto sea multihilo
+            msend.send_rmd_plain(username, passwgoo, gpg, passwgpg, RMD_DIR + rmd_filename, name, verbose)
+            os.remove(RMD_DIR + rmd_filename)
 
 ### MAIN ######################################################################
 def main():
@@ -67,6 +71,7 @@ def main():
         with open(LOGIN_FILE) as f: ncdata = f.read()
         ncdata_rows = ncdata.split('\n')
         username = ncdata_rows[0]
+
         passwgoo = ncdata_rows[1]
         passwgpg = ncdata_rows[2]
     else:
@@ -86,11 +91,23 @@ def main():
     # --- EXECUTION -----------------------------------------------------------
     # abrimos nuestro depósito de claves gpg
     gpg = gnupg.GPG(gnupghome=mygnupghome)
-    check_mails_t = threading.Thread(target=check_mails, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
-    check_reminders_t = threading.Thread(target=check_reminders, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_r", verbose))
 
-    # check_mails_t.start()
-    check_reminders_t.start()
+    while True:
+        if (verbose >= 1) and loop: log.p.loop("["+utils.get_new_strtime()+"] beginning of the cycle")
+        check_mails_t = threading.Thread(target=check_mails, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
+        check_reminders_t = threading.Thread(target=check_reminders, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_r", verbose))
+        check_reminders_t.start()
+        check_mails_t.start()
+        # check_reminders_t.join()
+        # check_mails_t.join()
+
+        # --- ENDO OF LOOP CHECK -----------------------------------------------
+        if loop:
+            try: time.sleep(LOOP_TIME)
+            except KeyboardInterrupt:
+                print("\nbye (~‾▿‾)~")
+                sys.exit()
+        else: break
 
     # --- Exit ----------------------------------------------------------------
     if verbose >= 1: log.p.exit("end of the execution")

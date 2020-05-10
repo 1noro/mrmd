@@ -42,6 +42,10 @@ def get_today():
 def get_hour():
     return datetime.datetime.now().strftime("%H:%M:%S")
 
+def get_sendmail_date():
+    # return datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z (%Z)")
+    return datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0200")
+
 # -----------------------------------------------------------------------------
 def get_sig_blk(str):
     out = ""
