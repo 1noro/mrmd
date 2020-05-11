@@ -49,7 +49,7 @@ def check_reminders(gpg, username, passwgoo, passwgpg, RMD_DIR, name, verbose):
     # comprobamos cuales de los recordatorios tenemos que enviar ahora y los enviamos
     for rmd_filename in all_rmd:
         parts = rmd_filename.split('_')
-        if parts[0] <= utils.get_today() and parts[1] <= utils.get_hour():
+        if len(parts) == 3 and parts[0] <= utils.get_today() and parts[1] <= utils.get_hour():
             # hacer que esto sea multihilo
             msend.send_rmd_plain(username, passwgoo, gpg, passwgpg, RMD_DIR + rmd_filename, name, verbose)
             os.remove(RMD_DIR + rmd_filename)
@@ -96,7 +96,7 @@ def main():
     gpg = gnupg.GPG(gnupghome=mygnupghome)
 
     while True:
-        if verbose >= 1 and loop: log.p.loop("["+utils.get_new_strtime()+"] beginning of the cycle")
+        if verbose >= 2 and loop: log.p.loop("["+utils.get_new_strtime()+"] beginning of the cycle")
         check_mails_t = threading.Thread(target=check_mails, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_m", verbose))
         check_reminders_t = threading.Thread(target=check_reminders, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_r", verbose))
         check_reminders_t.start()

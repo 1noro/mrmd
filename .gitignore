@@ -116,4 +116,4 @@ tmp/*.dec
 tmp/*.sig
 tmp/*.asc
 *.rmd
-rmd/*
+*.log
