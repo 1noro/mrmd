@@ -15,7 +15,6 @@ from mrmd import mrecv
 
 ### EDITABLE VARIABLES ########################################################
 LOGIN_FILE = "config/login.conf"
-MAILSTO_FILE = "config/mailsto.list"
 RMD_DIR = "rmd/"
 TABULAR = " " * 8
 LOOP_TIME = 30
@@ -75,16 +74,6 @@ def main():
         passwgpg = ncdata_rows[2]
     else:
         log.p.fail("'"+LOGIN_FILE+"' not found")
-        sys.exit()
-
-    # --- MAILSTO_FILE
-    if os.path.isfile(MAILSTO_FILE):
-        with open(MAILSTO_FILE) as f: ncdata = f.read()
-        ncdata_rows = ncdata.split('\n')
-        for row in ncdata_rows:
-            if row != "": mailsto.append(row)
-    else:
-        log.p.fail("'"+MAILSTO_FILE+"' not found")
         sys.exit()
 
     # --- EXECUTION -----------------------------------------------------------
