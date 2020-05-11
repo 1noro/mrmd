@@ -155,7 +155,7 @@ class RecMailPlain:
             # el resto es mensaje para el recordatorio
             rmd_msg = ""
             for line in dec_msg_lines: rmd_msg += line + '\n'
-            if len(rmd_msg) > 1: rmd_msg = rmd_msg[:-1]
+            # if len(rmd_msg) > 1: rmd_msg = rmd_msg[:-1]
 
             rmd_filename = day + "_" + hour + "_" + self.id + ".rmd"
 
