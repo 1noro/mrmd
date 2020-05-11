@@ -1,2 +1,2 @@
 #!/bin/bash
-nohup /bin/python3 mrmd.py -v 0 > mrmd.log &
+nohup /usr/bin/python3 mrmd.py -v 0 > mrmd.log &
