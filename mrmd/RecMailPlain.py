@@ -139,6 +139,46 @@ class RecMailPlain:
 
         return (day, hour)
 
+    def get_rmd_attr(self, dec_msg_lines, name, verbose):
+        if len(dec_msg_lines) >= 3:
+            # cada linea es una cosa por lo que voy leyendo linea a linea y asignando variables
+            (day, hour) = self.get_time(dec_msg_lines[0], dec_msg_lines[1], name)
+
+            mailto = self.get_text_between_brackets(self.mail_from)
+
+            subject = ""
+            if dec_msg_lines[2] == "": subject = "Reminder"
+            else: subject = dec_msg_lines[2]
+
+            # borro las lineas de day, hour y subject para que el resto sea solo texto
+            dec_msg_lines.remove(dec_msg_lines[0])
+            dec_msg_lines.remove(dec_msg_lines[0])
+            dec_msg_lines.remove(dec_msg_lines[0])
+
+            # el resto es mensaje para el recordatorio
+            rmd_msg = ""
+            for line in dec_msg_lines: rmd_msg += line + '\n'
+            if len(rmd_msg) > 1: rmd_msg = rmd_msg[:-1]
+
+            # log.pt.info("day: " + day, name)
+            # log.pt.info("hour: " + hour, name)
+            # log.pt.info("mailto: " + mailto, name)
+            # log.pt.info("subject: " + subject, name)
+            # log.pt.info("rmd_msg: " + rmd_msg, name)
+
+            rmd_filename = day + "_" + hour + "_" + self.id + ".rmd"
+
+            file_data = mailto + '\n'
+            file_data += subject + '\n'
+            file_data += rmd_msg
+            file_data = file_data.encode('utf-8')
+
+            return (file_data, rmd_filename)
+        else:
+            log.pt.fail("El número de líneas del mensaje rcibido no es el correcto.", name)
+            self.format_valid = False
+            return (None, None)
+
     def save_rmd(self, gpg, passwgpg, dir, name, verbose):
         dec_msg = self.decrypt(gpg, passwgpg).decode('utf-8')
         dec_msg_lines = None
@@ -152,49 +192,14 @@ class RecMailPlain:
         dec_msg_lines = dec_msg.split('\n')
         dec_msg_lines = self.remove_mail_sig(dec_msg_lines)
 
-        # cada linea es una cosa por lo que voy leyendo linea a linea y asignando variables
-        # day = ""
-        # if dec_msg_lines[0] == 'today' or dec_msg_lines[0] == '0': day = utils.get_today()
-        # else: day = dec_msg_lines[0].replace('.', '-').replace(':', '-').replace(' ', '-')
-        # day_arr = day.split('-')
-        #
-        # hour = dec_msg_lines[1].replace('.', ':').replace('-', ':').replace(' ', ':')
-        # hour_arr = hour.split(':')
-        #
-        # rmd_date = datetime.datetime(day_arr[0], day_arr[1], day_arr[2], hour_arr[0], hour_arr[1], hour_arr[2])
-        # day = rmd_date.strftime("%Y-%m-%d")
-        # hour = rmd_date.strftime("%H:%M:%S")
+        (file_data, rmd_filename) = self.get_rmd_attr(dec_msg_lines, name, verbose)
+        rmd_filename = dir + rmd_filename
 
-        (day, hour) = self.get_time(dec_msg_lines[0], dec_msg_lines[1], name)
-
-        mailto = self.get_text_between_brackets(self.mail_from)
-
-        subject = ""
-        if dec_msg_lines[2] == "": subject = "Reminder"
-        else: subject = dec_msg_lines[2]
-
-        # borro las lineas de day, hour y subject para que el resto sea solo texto
-        dec_msg_lines.remove(dec_msg_lines[0])
-        dec_msg_lines.remove(dec_msg_lines[0])
-        dec_msg_lines.remove(dec_msg_lines[0])
-
-        # el resto es mensaje para el recordatorio
-        rmd_msg = ""
-        for line in dec_msg_lines: rmd_msg += line + '\n'
-
-        # log.pt.info("day: " + day, name)
-        # log.pt.info("hour: " + hour, name)
-        # log.pt.info("mailto: " + mailto, name)
-        # log.pt.info("subject: " + subject, name)
-        # log.pt.info("rmd_msg: " + rmd_msg, name)
-
-        rmd_filename = dir + day + "_" + hour + "_" + self.id + ".rmd"
-        try:
-            file = open(rmd_filename, 'wb')
-            file.write((mailto + '\n').encode('utf-8'))
-            file.write((subject + '\n').encode('utf-8'))
-            file.write((rmd_msg).encode('utf-8'))
-            file.close()
-            if verbose >= 2: log.pt.ok("Se ha guardado " + rmd_filename, name)
-        except:
-            log.pt.fail("No se pudo grabar en '" + rmd_filename + "'.", name)
+        if self.format_valid:
+            try:
+                file = open(rmd_filename, 'wb')
+                file.write(file_data)
+                file.close()
+                if verbose >= 2: log.pt.ok("Se ha guardado " + rmd_filename, name)
+            except: log.pt.fail("No se pudo grabar en '" + rmd_filename + "'.", name)
+        else: log.pt.fail("No se grabó el recordatorio, el formato no es válido.", name)
