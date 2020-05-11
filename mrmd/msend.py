@@ -50,7 +50,7 @@ def send_rmd_plain(gmail_user, gmail_password, gpg, passwgpg, rmd_filename, name
                         "\r\n" \
                         "" + body.data.decode('utf-8') + ""
 
-        print(email_text)
+        # print(email_text)
 
         try:
             server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
