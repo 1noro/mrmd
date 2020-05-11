@@ -6,6 +6,7 @@ import os
 import email
 import email.parser
 import email.policy
+import datetime
 
 import mrmd.utils as utils
 import mrmd.log as log
@@ -26,6 +27,7 @@ class RecMailPlain:
 
     valid = False
     verified = False
+    format_valid = True
 
     def __init__(self, msg, name):
         self.id = utils.get_unique_date()
@@ -118,6 +120,25 @@ class RecMailPlain:
         pattern = r"<(.*?)>"
         return re.findall(pattern, text, flags=0)[0]
 
+    def get_time(self, day_str, hour_str, name):
+        day = ""
+        if day_str == 'today' or day_str == '0': day = utils.get_today()
+        else: day = day_str.replace('.', '-').replace(':', '-').replace(' ', '-')
+        day_arr = day.split('-')
+
+        hour = hour_str.replace('.', ':').replace('-', ':').replace(' ', ':')
+        hour_arr = hour.split(':')
+
+        try:
+            rmd_date = datetime.datetime(int(day_arr[0]), int(day_arr[1]), int(day_arr[2]), int(hour_arr[0]), int(hour_arr[1]), int(hour_arr[2]))
+            day = rmd_date.strftime("%Y-%m-%d")
+            hour = rmd_date.strftime("%H:%M:%S")
+        except:
+            log.pt.fail("No se pudo validar el formato de la fecha.", name)
+            self.format_valid = False
+
+        return (day, hour)
+
     def save_rmd(self, gpg, passwgpg, dir, name, verbose):
         dec_msg = self.decrypt(gpg, passwgpg).decode('utf-8')
         dec_msg_lines = None
@@ -132,11 +153,22 @@ class RecMailPlain:
         dec_msg_lines = self.remove_mail_sig(dec_msg_lines)
 
         # cada linea es una cosa por lo que voy leyendo linea a linea y asignando variables
-        day = ""
-        if dec_msg_lines[0] == 'today' or dec_msg_lines[0] == '0': day = utils.get_today()
-        else: day = dec_msg_lines[0] # hay que comprobar que las fechas sean con 0s a la izquierda
-        hour = dec_msg_lines[1].replace('.', ':').replace('-', ':') # hay que comprobar que las horas sean con 0s a la izquierda
+        # day = ""
+        # if dec_msg_lines[0] == 'today' or dec_msg_lines[0] == '0': day = utils.get_today()
+        # else: day = dec_msg_lines[0].replace('.', '-').replace(':', '-').replace(' ', '-')
+        # day_arr = day.split('-')
+        #
+        # hour = dec_msg_lines[1].replace('.', ':').replace('-', ':').replace(' ', ':')
+        # hour_arr = hour.split(':')
+        #
+        # rmd_date = datetime.datetime(day_arr[0], day_arr[1], day_arr[2], hour_arr[0], hour_arr[1], hour_arr[2])
+        # day = rmd_date.strftime("%Y-%m-%d")
+        # hour = rmd_date.strftime("%H:%M:%S")
+
+        (day, hour) = self.get_time(dec_msg_lines[0], dec_msg_lines[1], name)
+
         mailto = self.get_text_between_brackets(self.mail_from)
+
         subject = ""
         if dec_msg_lines[2] == "": subject = "Reminder"
         else: subject = dec_msg_lines[2]

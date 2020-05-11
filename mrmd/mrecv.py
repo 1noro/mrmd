@@ -1,14 +1,10 @@
 
-import datetime # creo que es prescindible
-
 import imaplib
 import email
 import email.parser
 import email.policy
 
 import mrmd.log as log
-import mrmd.RecMail
-from mrmd.RecMail import RecMail
 from mrmd.RecMailPlain import RecMailPlain
 
 ### FUNCTIONS #################################################################
