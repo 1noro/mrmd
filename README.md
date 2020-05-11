@@ -2,5 +2,5 @@
 mailer-reminder
 
 ### To-do
-- Hay que comprobar que las fechas sean con 0s a la izquierda.
-- Hay que comprobar que las horas sean con 0s a la izquierda.
+- Notificar el fallo en el formato del mensaje.
+- Responder a ping.

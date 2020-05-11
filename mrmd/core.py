@@ -101,6 +101,7 @@ def main():
         check_reminders_t = threading.Thread(target=check_reminders, args=(gpg, username, passwgoo, passwgpg, RMD_DIR, "ck_r", verbose))
         check_reminders_t.start()
         check_mails_t.start()
+        # aún no se si es recomendable usar el join en esta situación
         # check_reminders_t.join()
         # check_mails_t.join()
 
