@@ -42,11 +42,8 @@ class RecMailPlain:
 
         self.msg_cont_enc = msg.get_content()
         pattern = re.compile("-----BEGIN PGP MESSAGE-----")
-        if pattern.match(self.msg_cont_enc):
-            # log.pt.ok("El mensaje " + self.id + " está encriptado.", name)
-            self.valid = True
-        else:
-            log.pt.fail("El mensaje " + self.id + " NO está encriptado.", name)
+        if pattern.match(self.msg_cont_enc): self.valid = True
+        else: log.pt.fail("El mensaje " + self.id + " NO está encriptado.", name)
 
     def getMsg(self):
         return self.msg
@@ -159,12 +156,6 @@ class RecMailPlain:
             rmd_msg = ""
             for line in dec_msg_lines: rmd_msg += line + '\n'
             if len(rmd_msg) > 1: rmd_msg = rmd_msg[:-1]
-
-            # log.pt.info("day: " + day, name)
-            # log.pt.info("hour: " + hour, name)
-            # log.pt.info("mailto: " + mailto, name)
-            # log.pt.info("subject: " + subject, name)
-            # log.pt.info("rmd_msg: " + rmd_msg, name)
 
             rmd_filename = day + "_" + hour + "_" + self.id + ".rmd"
 
