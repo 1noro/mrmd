@@ -1,6 +1,4 @@
 
-# from pprint import pprint # solo para tests
-
 import re
 import os
 import email

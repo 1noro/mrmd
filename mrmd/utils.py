@@ -1,15 +1,9 @@
-# core.utils
-# by inoro
 
-### IMPORTS ###################################################################
 import datetime
 import re
 from optparse import OptionParser
 
 import mrmd.log as log
-# alternativa:
-# import mrmd
-# from mrmd import log
 
 ### FUNCTIONS #################################################################
 def options_definition():

@@ -22,7 +22,7 @@ LOOP_TIME = 30
 ### AUTOMATIC VARIABLES #######################################################
 verbose = 0
 # version=open("version.txt").read().replace('\n','')
-version="0.0.3"
+version="0.1.0"
 username = ""
 passwgoo = ""
 passwgpg = ""

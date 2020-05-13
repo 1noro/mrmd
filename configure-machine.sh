@@ -3,6 +3,6 @@
 
 apt update
 apt upgrade -y
-apt install -y python3-gnupg
+apt install -y gnupg git python3-gnupg 
 
 timedatectl set-timezone Europe/Madrid

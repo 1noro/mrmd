@@ -3,6 +3,13 @@ All notable changes to [gnu-linux-install-configs](https://github.com/boot111000
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Release
+
+## 0.1.0 - 2020-05-13
+> by inoro <ppuubblliicc@protonmail.com>
+### Changed
+- Pequeños ajustes y retoques para pulir el código.
+
 ## Unreleased
 
 ## 0.0.4 - 2020-05-11
