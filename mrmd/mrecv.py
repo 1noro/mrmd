@@ -24,9 +24,9 @@ def get_unseen_mails(username, passwgoo, name, verbose):
             typ, data = conn.fetch(num,'(RFC822)')
             msg = email.parser.BytesParser(policy=email.policy.default).parsebytes(data[0][1], headersonly=False)
             # comprobamos que el formato del mensaje sea el correcto
-            if msg['subject'] == 'r' and (msg.get_content_type() == 'multipart/encrypted' or msg.get_content_type() == 'multipart/signed'):
-                mail_arr.append(RecMail(msg))
-            elif msg['subject'] == 'r' and msg.get_content_type() == 'text/plain':
+            # if msg['subject'] == 'r' and (msg.get_content_type() == 'multipart/encrypted' or msg.get_content_type() == 'multipart/signed'):
+            #     mail_arr.append(RecMail(msg))
+            if msg['subject'][:1].lower() == 'r' and msg.get_content_type() == 'text/plain':
                 mail_arr.append(RecMailPlain(msg, name))
             # typ, data = conn.store(num,'-FLAGS','\\Seen') # desmarcamaos el mensaje como leido
             # typ, data = conn.store(num,'+FLAGS','\\Seen') # marcamos como leido el mensaje (no hace falta, es automático)
