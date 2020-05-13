@@ -58,9 +58,7 @@ def main():
     # --- Parameters ----------------------------------------------------------
     (options, args) = utils.options_definition()
     # --- verbose
-    verbose = 0
-    if options.verbose :
-        verbose = int(options.verbose)
+    if options.verbose : verbose = int(options.verbose)
 
     # --- CHECK CONFIG --------------------------------------------------------
     if verbose >= 0: log.p.info("starting  v" + version + " " + utils.get_new_strtime())
