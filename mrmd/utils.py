@@ -23,9 +23,7 @@ def options_definition():
     return parser.parse_args()
 
 def get_new_strtime():
-    now = datetime.datetime.now()
-    strnow = now.strftime("%Y-%m-%d %H:%M:%S")
-    return strnow
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def get_unique_date():
     return datetime.datetime.now().strftime("%Y%m%d%H%M%S-%f")

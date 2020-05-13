@@ -63,7 +63,7 @@ def main():
         verbose = int(options.verbose)
 
     # --- CHECK CONFIG --------------------------------------------------------
-    if verbose >= 1: log.p.info("starting  v"+version)
+    if verbose >= 0: log.p.info("starting  v" + version + " " + utils.get_new_strtime())
     # --- LOGIN_FILE
     if os.path.isfile(LOGIN_FILE):
         with open(LOGIN_FILE) as f: ncdata = f.read()
@@ -79,7 +79,11 @@ def main():
     # --- EXECUTION -----------------------------------------------------------
     # sincronizamos la ejecución con los minutos del sistema
     if verbose >= 1: log.p.info("Sincronizando la ejecución con los minutos del sistema.")
-    while not utils.get_sec() == "00" and not utils.get_sec() == "30": time.sleep(1)
+    while not utils.get_sec() == "00" and not utils.get_sec() == "30":
+        try: time.sleep(1)
+        except KeyboardInterrupt:
+            print("\nbye (~‾▿‾)~")
+            sys.exit()
 
     # abrimos nuestro depósito de claves gpg
     gpg = gnupg.GPG(gnupghome=mygnupghome)
